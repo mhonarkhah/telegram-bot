@@ -46,12 +46,16 @@ def get_output_summary_string(summary_result, numdays=1):
         output_string += '*voice stats for today*\n'
     else:
         output_string += '*voice stats since  {}/{}/{}*\n'.format(month, day, year)
-    count_length = max([len(str(person[1])) for person in summary_result])
-    for person in summary_result:
+    if len(summary_result) > 0:
+        count_length = max([len(str(person[1])) for person in summary_result])
+    else:
+        count_length = 1
+    summary_result_srted = sorted(summary_result, key=lambda x: x[2], reverse=True)
+    for i, person in enumerate(summary_result_srted):
         first_name = person[0]
         count      = person[1]
         duration   = str(datetime.timedelta(seconds=person[2]))
-        output_string += '`{:8}` *{{* num:`{:<{}}`,   time: `{}` *}}*\n'.format(first_name, count, count_length, duration)
+        output_string += '`{:8}` *{{* num:`{:<{}}`, time: `{}` *}}*\n'.format(first_name, count, count_length, duration)
     if output_string == '':
         output_string = 'The database is empty now'
     return output_string
